@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
+use App\Services\UserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -12,10 +14,12 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class TaskController extends Controller
 {
     private TaskService $taskService;
+    private UserService $userService;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, UserService $userService)
     {
         $this->taskService = $taskService;
+        $this->userService = $userService;
     }
 
     /**
@@ -52,6 +56,7 @@ class TaskController extends Controller
      *
      * @param Request $request
      * @return TaskResource|JsonResponse
+     * @throws Exception
      */
     public function store(Request $request): TaskResource|JsonResponse
     {
@@ -59,6 +64,18 @@ class TaskController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $userId = $request->input('user_id');
+
+        if (empty($userId)) {
+            return response()->json(['error' => 'User id is required'], 400);
+        }
+
+        $userExists = $this->userService->userExists($userId);
+
+        if (!$userExists) {
+            return response()->json(['error' => 'User not found'], 404);
         }
 
         $task = $this->taskService->create($request->all());
