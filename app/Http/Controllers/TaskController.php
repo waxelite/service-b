@@ -7,6 +7,7 @@ use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use App\Services\UserService;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -56,7 +57,7 @@ class TaskController extends Controller
      *
      * @param Request $request
      * @return TaskResource|JsonResponse
-     * @throws Exception
+     * @throws Exception|GuzzleException
      */
     public function store(Request $request): TaskResource|JsonResponse
     {
