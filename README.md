@@ -28,7 +28,8 @@ POST /api/tasks
 {
   "title": "Task title",
   "description": "Task description",
-  "category_id": 1
+  "category_id": 1,
+  "status": "pending"
 }
 ```
 - Creates a new task with the provided data.
@@ -42,7 +43,8 @@ PUT /api/tasks/{id}
 {
   "title": "Updated task title",
   "description": "Updated task description",
-  "category_id": 1
+  "category_id": 1, 
+  "status": "pending"
 }
 ```
 - Updates the task with the provided ID.
